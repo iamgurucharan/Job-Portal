@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Listings</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .card-text {
+            font-size: 1rem;
+            color: #555;
+        }
+        .btn-primary {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+        .footer {
+            background-color: #343a40;
+            color: white;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .search-filter {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        .pagination {
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .job-categories {
+            margin-bottom: 30px;
+        }
+        .job-categories .badge {
+            margin: 5px;
+            font-size: 0.9rem;
+            padding: 8px 12px;
+            border-radius: 20px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        .job-categories .badge:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Job Portal</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('job_list') }}">Job Listings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('register') }}">Register</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Job Listings Section -->
+    <div class="container my-5">
+        <h1 class="my-4 text-center">Job Listings</h1>
+
+        <!-- Search and Filter -->
+        <div class="search-filter">
+            <div class="row">
+                <div class="col-md-8">
+                    <input type="text" class="form-control" placeholder="Search jobs by title or keyword...">
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select">
+                        <option value="">Location</option>
+                        <option value="New York">New York</option>
+                        <option value="San Francisco">San Francisco</option>
+                        <option value="Chicago">Chicago</option>
+                        <option value="Austin">Austin</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select">
+                        <option value="">Salary Range</option>
+                        <option value="50000-70000">$50,000 - $70,000</option>
+                        <option value="70000-90000">$70,000 - $90,000</option>
+                        <option value="90000-110000">$90,000 - $110,000</option>
+                        <option value="110000+">$110,000+</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Job Categories -->
+        <div class="job-categories text-center">
+            <span class="badge">Software Engineering</span>
+            <span class="badge">Data Science</span>
+            <span class="badge">Product Management</span>
+            <span class="badge">UX Design</span>
+            <span class="badge">Marketing</span>
+        </div>
+
+        <!-- Job Listings -->
+        <div class="row">
+            {% for job in jobs %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ job[1] }}</h5>
+                        <p class="card-text">{{ job[2] }}</p>
+                        <p class="card-text"><strong>Salary:</strong> ${{ job[3] }}</p>
+                        <p class="card-text"><strong>Location:</strong> {{ job[4] }}</p>
+                        <p class="card-text"><strong>Company:</strong> {{ job[5] }}</p>
+                        <a href="{{ url_for('job_detail', job_id=job[0]) }}" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer text-center">
+        <div class="container">
+            <p>&copy; 2025 Job Portal. All rights reserved.</p>
+            <p>
+                <a href="#">Privacy Policy</a> |
+                <a href="#">Terms of Service</a>
+            </p>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
